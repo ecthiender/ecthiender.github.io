@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>rayanon</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2016-02-09T14:17:00+05:30</updated><entry><title>The story of my first log</title><link href="/first-log.html" rel="alternate"></link><published>2016-02-09T14:17:00+05:30</published><author><name>Anon Ray</name></author><id>tag:,2016-02-09:first-log.html</id><summary type="html">&lt;p&gt;&lt;em&gt;This is a very boring story of why I started this blog. Please read it at your
+<feed xmlns="http://www.w3.org/2005/Atom"><title>rayanon</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2017-02-20T19:30:00+05:30</updated><entry><title>Rubbish</title><link href="/writing-dopamine.html" rel="alternate"></link><published>2017-02-20T19:30:00+05:30</published><updated>2017-02-20T19:30:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2017-02-20:/writing-dopamine.html</id><summary type="html">&lt;p&gt;Hello, I'm writing some notes here. I see a complete white screen infront of
+me, which is supposed to give me a distraction-free writing experience. But I'm
+not sure if this is entirely true that it happens. For example, when I looked
+at the screen it kind of felt awkward …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Hello, I'm writing some notes here. I see a complete white screen infront of
+me, which is supposed to give me a distraction-free writing experience. But I'm
+not sure if this is entirely true that it happens. For example, when I looked
+at the screen it kind of felt awkward that its completely white and now I have
+to surrender myself to the serene feeling of white and transcend to a higher
+level to get some inspiration for my writing. But I also see a point that when
+someone has already some idea on what to write about, when they see the
+complete white screen they can concentrate on their mind and the just the words
+that flow out of their fingers into this screen which might obviously be a very
+good writing experience, to the point it is almost a dopamine trip I suppose.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;PS: This was written to try out a new note taking app. After writing it out
+thought of posting it here.&lt;/p&gt;</content><category term="random"></category><category term="dopamine"></category></entry><entry><title>The story of my first log</title><link href="/first-log.html" rel="alternate"></link><published>2016-02-09T14:17:00+05:30</published><updated>2016-02-09T14:17:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2016-02-09:/first-log.html</id><summary type="html">&lt;p&gt;Boring story of why I started this blog&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;em&gt;This is a very boring story of why I started this blog. Please read it at your
 own risk!&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img alt="To blog or not to blog" src="/images/to-blog-or-not-to-blog.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="To blog or not to blog" class="center-img" src="/images/to-blog-or-not-to-blog.png"&gt;&lt;/p&gt;
 &lt;p&gt;Around 2004-2009 netizens (or citizens of the Internet) became quite obsessed
 with something called blog. Blog is a truncation of the expression web log.
 Which essentially means a log of yourself on the World Wide Web. Blogs became
@@ -59,5 +74,5 @@ blog yet, and have been etching to start your own blog - I highly recommend
 &lt;p&gt;Said all of the above and have started a blog, I plan to continue this blog.  I
 don't know yet what I'll be posting or writing here, I think that will become
 more clear with time.&lt;/p&gt;
-&lt;p&gt;Let's see where this goes from here!&lt;/p&gt;</summary><category term="random"></category></entry><entry><title>Hello World</title><link href="/hello-world.html" rel="alternate"></link><published>2016-02-08T21:10:00+05:30</published><author><name>Anon Ray</name></author><id>tag:,2016-02-08:hello-world.html</id><summary type="html">&lt;h1&gt;Hello World!&lt;/h1&gt;
-&lt;p&gt;The customary Hello World from a programmer. Even on his blog.&lt;/p&gt;</summary><category term="random"></category></entry></feed>
+&lt;p&gt;Let's see where this goes from here!&lt;/p&gt;</content><category term="random"></category><category term="blogging"></category><category term="history"></category></entry><entry><title>Hello World</title><link href="/hello-world.html" rel="alternate"></link><published>2016-02-08T21:10:00+05:30</published><updated>2016-02-08T21:10:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2016-02-08:/hello-world.html</id><summary type="html">&lt;p&gt;Hello world&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Hello World!&lt;/h1&gt;
+&lt;p&gt;The customary Hello World from a programmer. Even on his blog.&lt;/p&gt;</content><category term="random"></category></entry></feed>

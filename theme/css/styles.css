@@ -1,0 +1,152 @@
+@import url(reset.css);
+@import url(pygments.css);
+@import url(icons.css);
+
+/* General stuff. */
+
+body {
+  background-color: #fafafa;
+  /*background-color: #ecf0f1; */
+  color: #333;
+  font-family: 'Gentium Basic', serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+h1 { font-size: 2.5em;  }
+h2 { font-size: 2.0em;  }
+h3 { font-size: 1.75em; }
+h4 { font-size: 1.5em;  }
+h5 { font-size: 1.25em; }
+h6 { font-size: 1.0em;  }
+
+#main-container {
+  width: 66.66666%;
+  margin: 10px auto;
+}
+
+@media screen and (max-width: 481px) {
+  #main-container {
+    width: 85%;
+    margin: 10px auto;
+  }
+
+  img {
+    max-width: 340px;
+  }
+}
+
+html {
+  font-size: 18px;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+hr {
+  margin: 1.2em auto;
+  border-top: 1px solid #eee;
+}
+
+a { color: #333; }
+
+a:hover { color: #2980b9; }
+
+p { margin: 30px auto; }
+
+.site-header {
+  margin: 3px 3px 30px 3px;
+}
+
+.nodec { text-decoration: none; }
+
+.site-banner {
+  margin-bottom: 30px;
+}
+
+.sitetitle {
+  font-size: 1.3em;
+  color: #333;
+}
+
+.sitetitle:hover {
+  color: #333;
+}
+
+.sitesubtitle {
+  font-size: 1.2em;
+}
+
+.menu {
+  margin-bottom: 30px;
+}
+
+.menu > ul > li {
+  display: inline;
+  margin-right: 15px;
+  font-size: 1.2em;
+  text-transform: uppercase;
+}
+
+.menu > ul > li.active a {
+  border-bottom: 2px solid #333;
+  padding-bottom: 2px;
+}
+
+.menu > ul > li > a:hover {
+  color: #333;
+  padding-bottom: 2px;
+  border-bottom: 2px solid #333;
+}
+
+.content {
+  margin: 30px auto 60px auto;
+}
+
+.content hr {
+  width: 70%;
+}
+
+.content .center-img {
+  margin: auto;
+  display: block;
+}
+
+.post-list {
+  list-style: none;
+}
+
+.post-list-item {
+  margin-bottom: 30px;
+}
+.post-list-item p {
+  margin: 0 auto;
+}
+
+.post-list-item-heading {
+  margin-bottom: 9px;
+}
+
+.content .article {
+  margin: 30px auto;
+}
+
+.postinfo .published {
+  font-style: italic;
+}
+
+.contact p {
+  margin: 3px auto;
+}
+footer {
+  width: 300px;
+  margin: 50px auto 0 auto;
+  font-size: 0.85em;
+  color: #555;
+  text-align: center;
+}
