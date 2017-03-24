@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="description" content="rayanon, Anon, Anon Ray, ecthiender, blog, website" />
+      <meta name="author" content="Anon Ray, rayanon, ecthiender" />
+
+      <link href='https://fonts.googleapis.com/css?family=Gentium+Basic:400,700' rel='stylesheet' />
+      <link rel="stylesheet" href="/theme/css/styles.css" />
+
+      <title>  rayanon's website  </title>
+
+  </head>
+
+  <body>
+    <div id="main-container">
+      <!-- header -->
+      <header class="site-header">
+        <!-- site title and subtitle -->
+        <div class="site-banner">
+          <h1> <a class="sitetitle nodec" href="/">rayanon</a> </h1>
+          <h4 class="sitesubtitle">Musings of a human existence</h4>
+        </div>
+        <!-- nav -->
+        <!-- set the current page based on page name -->
+        <nav role="menu" class="menu">
+          <ul>
+            <!-- menu items-->
+              <li >
+                <a class="nodec" href="/">Home</a>
+              </li>
+              <li >
+                <a class="nodec" href="/categories.html">Categories</a>
+              </li>
+              <li >
+                <a class="nodec" href="/tags.html">Tags</a>
+              </li>
+
+            <!--pages-->
+              <li  >
+                <a class="nodec" href="/pages/about.html">About</a>
+              </li>
+              <li  >
+                <a class="nodec" href="/pages/write.html">Write</a>
+              </li>
+          </ul>
+        </nav>
+      </header>
+
+      <hr/>
+
+      <!-- content -->
+
+<section class="content">
+
+  <h2> Backup strategies on&nbsp;Postgres </h2>
+
+  <div class="postinfo">
+    <div class="published" title="2017-02-21T15:30:00+05:30">
+      Posted on February 21 2017
+    </div>
+    <div class="time-to-read">
+      5 min read
+    </div>
+
+  </div> <!-- end .postinfo -->
+
+  <div class="article">
+    <p>If you are using any database in production you should always have backups.
+Servers can crash, disks can fail, data can get corrupted, people can make
+mistakes; a lot of failures can happen with the production instance. Hence it
+is extremely important to have backups on a production&nbsp;system.</p>
+<p>In this post I&#8217;m going to discuss various backup options that are available on
+<a href="https://postgresql.org">PostgreSQL</a> and the various ways one can configure taking backups of the
+database in production. I&#8217;ll also discuss in what situation what kind of
+backups are more&nbsp;useful.</p>
+<p>First, let&#8217;s look at the various backup options available in&nbsp;Postgres:</p>
+<ol>
+<li>Logical&nbsp;backups</li>
+<li>Physical&nbsp;backups</li>
+<li>Continuous&nbsp;backups</li>
+</ol>
+<p><br/></p>
+<h4>Logical&nbsp;backups</h4>
+<p>Logical backups are dumps of <span class="caps">SQL</span> statements which describe the state of the
+database. They can be obtained using a tool like <code>pg_dump</code>. These dump files
+are just <span class="caps">SQL</span> files. Hence, they can be imported to another postgres instance
+using <code>psql</code> normally. It is usually a good idea to take one logical backup
+before altering schema or migrating a&nbsp;database.</p>
+<div class="highlight"><pre><span></span>$ pg_dump -U admin -h db.example.com mydatabase &gt; dump.sql
+</pre></div>
+
+
+<p>The file <code>dump.sql</code> is your backup. To recover it, run this in another&nbsp;database:</p>
+<div class="highlight"><pre><span></span>$ psql -U admin -h db2.example.com mydatabase &lt; dump.sql
+</pre></div>
+
+
+<p><code>-U</code> takes the postgres username. Port can also be specified via <code>-p</code>.</p>
+<h4>Physical&nbsp;backups</h4>
+<p>Physical backups are backups via the filesystem. Meaning they can be snapshots
+of the filesystem itself, or they could be just copies of the Postgres
+database&#8217;s data directory. The entire database instance&#8217;s state is stored in
+Postgres&#8217; data directory; which is usually <code>/var/lib/postgresql/&lt;VERSION&gt;/data</code>
+on *nix&nbsp;machines.</p>
+<p>You can use <code>rsync</code> to periodically take backup of this data directory, and
+then store the backup&nbsp;elsewhere.</p>
+<p>As an&nbsp;example:</p>
+<div class="highlight"><pre><span></span>$ tar czf mydb-pgdata-21022017-1803.tar.gz  /var/lib/postgresql/9.6/data
+$ rsync --progress --partial --recursive mydb-pgdata-21022017-1803.tar.gz <span class="se">\</span>
+    backup@backup-server.example.com:/vol/pgdata_backups/
+</pre></div>
+
+
+<p>We first make a compressed (gzipped) tarball of the data directory, and then
+use <code>rsync</code> to copy the files to our backup&nbsp;server.</p>
+<h4>Continuous&nbsp;backups</h4>
+<p>Continuous backups are an advanced feature of Postgres. Postgres database has
+this design where it first commits a transaction a file on the disk, called the
+Write-ahead Log (or <span class="caps">WAL</span>), and waits for the data to be actually written to the
+disk; and only then commits the transaction to the current database object.
+This way even if a Postgres server crashes in the middle of a transaction, it
+will never have inconsistent state and when it recovers it can replay the <span class="caps">WAL</span>
+to arrive at the state it was when it&nbsp;crashed.</p>
+<p>This kickass <span class="caps">WAL</span> design results in a uber-kickass backup system. These <span class="caps">WAL</span> logs
+can copied or streamed over to another machine where&nbsp;-</p>
+<ol>
+<li>it can be kept as a backup - and this enables us to recover a Postgres
+   database in any point in time. Just replay Postgres to that point in the <span class="caps">WAL</span>
+   where you fancy. This also called a Point-in-time recovery (<span class="caps">PITR</span>) in <span class="caps">DB</span>&nbsp;world.</li>
+<li>it can be replayed to a secondary Postgres instance and then this instance
+   can be used as a slave, a replicated instance, a backup or even a secondary
+   read-only&nbsp;instance.</li>
+</ol>
+<p>Configuring continous backups is little more involved and probably will require
+its own post and hence I will not cover configuration of continous backups
+here. You can search about it on the internet. But I can suggest using <a href="https://github.com/wal-e/wal-e"><span class="caps">WAL</span>-E</a>,
+which is a fantastic tool that makes setting up continous backup very easy.
+Once you install and configure <span class="caps">WAL</span>-E it can stream your backup files to S3,
+Google bucket, Azure&nbsp;etc.</p>
+<h4>But which backup to use&nbsp;where?</h4>
+<p>Now, the natural next question is which backup method to use. Should someone
+use all the possible methods, or sticking to one method is good&nbsp;enough?</p>
+<p>It can be confusing or daunting to look at so many options. Hence, I&#8217;m here to
+nudge you in the right direction with the right ideas. But don&#8217;t take my ideas
+for granted. Do your own research, think through your problems, and come up
+with your own&nbsp;conclusion.</p>
+<p>Almost in all situations continuous backup makes sense. It offers a streaming,
+continuous backup of your production database and it also offers
+Point-in-time-recovery. <span class="caps">PITR</span> can be very valuable, because it let&#8217;s you specify
+a timestamp and recover to it. Although, setting up backup and recovery
+mechanism in this method is little more complicated - as there can be few edge
+cases, specially regarding the process you will adapt to do recovery. Hence,
+this method requires a bit of planning and hence takes more effort overall. But
+probably also pays the best in the long&nbsp;run.</p>
+<p>Filesystem level backups are error-prone, there is no guarantee that you get a
+consistent snapshot. What if the moment when you were taking the snapshot of
+the underlying filesystem, the database decided to write some new data. There
+is no way for you to control that. Also by moving around the filesystem for our
+backups, we are essentially not leveraging what the database can do for us.
+Hence, for most of the cases filesystem backups can be ignored. If you are
+really paranoid and want to keep redundant backups, sure go ahead and setup a
+cronjob to rsync your <span class="caps">PGDATA</span> directory somewhere&nbsp;safe. </p>
+<p>Logical backups give you a logical snapshot of your database. Logical snapshots
+are tremendously useful if you are migrating your database. Its always a good
+idea when you are migrating a schema, that you take a logical backup before
+migrating. It is also useful for debugging purposes. You can look at two
+different logical dumps and compare them to figure out data discrepancies.
+It&#8217;s not a bad idea to add a cronjob which takes a <code>pg_dump</code> periodically,
+along with your continuous backup configuration. That way you have a logical
+snapshot of your database and you have redundant backups. Win-win&nbsp;situation!</p>
+<p>On closing notes, another important aspect of database backup and recovery
+process is to always validate and check that current backups are happening, and
+also from existing backups database can be recovered. In the light of the
+recent Gitlab incident this has become even more important. As an <span class="caps">DBA</span> or admin
+it is not just enough to setup a backup system. But to regularly monitor the
+backups and also do a drill periodically where you take one of the latest
+backups and try to recover from&nbsp;it.</p>
+<p>Backup systems are generally long running and people usually forget about them
+right after configuring them. Because they do not need to touch that system in
+a long time. But eventually when the day comes when you have check your backups
+and recover your database from one of them, you should wish that all your
+backups are working because the last time you checked it was 2 years&nbsp;back.</p>
+  </div> <!-- end .article -->
+
+</section>
+
+  <div class="article-tags">
+    tags: &nbsp;
+      <a href="/tag/postgres.html">postgres</a>,
+      <a href="/tag/backups.html">backups</a>,
+      <a href="/tag/sysadmin.html">sysadmin</a>,
+  </div>
+
+
+      <hr/>
+
+      <!-- footer -->
+      <footer>
+        <p>
+          © 2017 Anon Ray. Powered by <a href="http://getpelican.com/">Pelican</a>.
+          <!--
+            © Anon Ray, license <a href=""> </a>
+            unless otherwise noted.
+          -->
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

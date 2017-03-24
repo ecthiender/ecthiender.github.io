@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>rayanon - Ramblings</title><link href="/" rel="alternate"></link><link href="/feeds/ramblings.atom.xml" rel="self"></link><id>/</id><updated>2017-02-20T19:30:00+05:30</updated><entry><title>Rubbish</title><link href="/writing-dopamine.html" rel="alternate"></link><published>2017-02-20T19:30:00+05:30</published><updated>2017-02-20T19:30:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2017-02-20:/writing-dopamine.html</id><summary type="html">&lt;p&gt;Hello, I'm writing some notes here. I see a complete white screen infront of
-me, which is supposed to give me a distraction-free writing experience. But I'm
+<feed xmlns="http://www.w3.org/2005/Atom"><title>rayanon - Ramblings</title><link href="/" rel="alternate"></link><link href="/feeds/ramblings.atom.xml" rel="self"></link><id>/</id><updated>2017-02-20T19:30:00+05:30</updated><entry><title>Rubbish</title><link href="/writing-dopamine.html" rel="alternate"></link><published>2017-02-20T19:30:00+05:30</published><updated>2017-02-20T19:30:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2017-02-20:/writing-dopamine.html</id><summary type="html">&lt;p&gt;Hello, I&amp;#8217;m writing some notes here. I see a complete white screen infront of
+me, which is supposed to give me a distraction-free writing experience. But I&amp;#8217;m
 not sure if this is entirely true that it happens. For example, when I looked
-at the screen it kind of felt awkward …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Hello, I'm writing some notes here. I see a complete white screen infront of
-me, which is supposed to give me a distraction-free writing experience. But I'm
+at the screen it kind of …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Hello, I&amp;#8217;m writing some notes here. I see a complete white screen infront of
+me, which is supposed to give me a distraction-free writing experience. But I&amp;#8217;m
 not sure if this is entirely true that it happens. For example, when I looked
 at the screen it kind of felt awkward that its completely white and now I have
 to surrender myself to the serene feeling of white and transcend to a higher
@@ -11,18 +11,18 @@ level to get some inspiration for my writing. But I also see a point that when
 someone has already some idea on what to write about, when they see the
 complete white screen they can concentrate on their mind and the just the words
 that flow out of their fingers into this screen which might obviously be a very
-good writing experience, to the point it is almost a dopamine trip I suppose.&lt;/p&gt;
+good writing experience, to the point it is almost a dopamine trip I&amp;nbsp;suppose.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;PS: This was written while trying out a new note taking app. After writing it
-out, I thought of posting it here.&lt;/p&gt;</content><category term="random"></category><category term="dopamine"></category></entry><entry><title>The story of my first log</title><link href="/first-log.html" rel="alternate"></link><published>2016-02-09T14:17:00+05:30</published><updated>2016-02-09T14:17:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2016-02-09:/first-log.html</id><summary type="html">&lt;p&gt;Boring story of why I started this blog&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;em&gt;This is a very boring story of why I started this blog. Please read it at your
-own risk!&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class="caps"&gt;PS&lt;/span&gt;: This was written while trying out a new note taking app. After writing it
+out, I thought of posting it&amp;nbsp;here.&lt;/p&gt;</content><category term="random"></category><category term="dopamine"></category></entry><entry><title>The story of my first log</title><link href="/first-log.html" rel="alternate"></link><published>2016-02-09T14:17:00+05:30</published><updated>2016-02-09T14:17:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2016-02-09:/first-log.html</id><summary type="html">&lt;p&gt;Boring story of why I started this&amp;nbsp;blog&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;em&gt;This is a very boring story of why I started this blog. Please read it at your
+own&amp;nbsp;risk!&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img alt="To blog or not to blog" class="center-img" src="/images/to-blog-or-not-to-blog.png"&gt;&lt;/p&gt;
 &lt;p&gt;Around 2004-2009 netizens (or citizens of the Internet) became quite obsessed
 with something called blog. Blog is a truncation of the expression web log.
 Which essentially means a log of yourself on the World Wide Web. Blogs became
 hugely popular, where individuals published their own website with their own
 personal opinions or biased/unbiased, correct/incorrect information. All was
-well and blogs were thriving.&lt;/p&gt;
+well and blogs were&amp;nbsp;thriving.&lt;/p&gt;
 &lt;p&gt;But since 2009, individual website publishing saw a drop and more people
 flocked to larger platforms for blogging, established by companies which
 offered them ease of getting started to publish content; while sacrificing the
@@ -35,44 +35,44 @@ boom of social networks, and people could express how much they wanted with
 photographs, selfies and their own day-to-day activities; which became less
 artistic and more competitive (because people cared less of what and how they
 are expressing, and more on the quantity of posts and likes and comments and
-such). So a lot of people consider that was the death of blogging.&lt;/p&gt;
+such). So a lot of people consider that was the death of&amp;nbsp;blogging.&lt;/p&gt;
 &lt;p&gt;But people in the world of software were already writing blogs since the birth
 of the World Wide Web; and they kept maintaining their own blogs even after
 bigger publishing platforms took over the majority of blogging population.
 These people were mostly web developers, and other software engineers who knew
-the basics of web publishing - that is running one's own website, hosting etc.
+the basics of web publishing - that is running one&amp;#8217;s own website, hosting etc.
 Even if they were not managing their own hosting, they probably had an
 independent blog on managed infrastructure, and refrained from migrating
 entirely to any MegaCorp Inc. publishing platforms.  So, in short, if you are
-person in &lt;em&gt;tech&lt;/em&gt;, you probably run your own blog.&lt;/p&gt;
+person in &lt;em&gt;tech&lt;/em&gt;, you probably run your own&amp;nbsp;blog.&lt;/p&gt;
 &lt;p&gt;Not me. Even after being in the world of software and working as a web
 developer for quite sometime, I have never had a blog. I, simply, never felt the
-need of it. Not that I don't have an expressive voice in my head which wants to
+need of it. Not that I don&amp;#8217;t have an expressive voice in my head which wants to
 speak out and thwart some people, or ramble about some totally irrelevant,
 pointless topic from time to time; but I never really got the urge to really
 write up something and put it out there. I rarely post Facebook updates about
 something that is going through my mind or something that I want to talk about.
 Many things that I do want to talk about, say to a larger audience, even if
-that is something which most people don't talk about, they are already neat and
+that is something which most people don&amp;#8217;t talk about, they are already neat and
 snappy memes shared hundreds of times on Facebook, so I just reshare them. I
 sometimes tweet about things which are small, mostly news, on twitter; and
-maybe some interesting quote some time.&lt;/p&gt;
+maybe some interesting quote some&amp;nbsp;time.&lt;/p&gt;
 &lt;p&gt;Then why did I choose to start my own web log or blog? The story behind it is
-completely orthogonal to a regular person's motivation to start a blog, typical me.
+completely orthogonal to a regular person&amp;#8217;s motivation to start a blog, typical me.
 Recently, I came across this static site generator called
 &lt;a href="http://getpelican.com"&gt;Pelican&lt;/a&gt; which is a very popular and well known static
 generators in the &lt;em&gt;hacker&lt;/em&gt; world and the world of &lt;a href="https://python.org"&gt;Python&lt;/a&gt;.
 I have heard of this before and looked into before, but I never paid much
-attention to it. But I don't remember how, I just stumbled across this static
+attention to it. But I don&amp;#8217;t remember how, I just stumbled across this static
 site generator few days back. And since then I have been toy-ing with the idea
 to use Pelican, write some totally random crap, and put up some content on any
 of the dirt cheap cloud hosting providers or even publish to Github pages for
-free! So that's the story behind starting my blog: to try out &lt;strong&gt;Pelican&lt;/strong&gt;!&lt;/p&gt;
+free! So that&amp;#8217;s the story behind starting my blog: to try out &lt;strong&gt;Pelican&lt;/strong&gt;!&lt;/p&gt;
 &lt;p&gt;So if you are a programmer, developer or software engineer, and do not have a
 blog yet, and have been etching to start your own blog - I highly recommend
 &lt;a href="http://getpelican.com"&gt;Pelican&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Said all of the above and have started a blog, I plan to continue this blog.  I
-don't know yet what I'll be posting or writing here, I think that will become
-more clear with time.&lt;/p&gt;
-&lt;p&gt;Let's see where this goes from here!&lt;/p&gt;</content><category term="random"></category><category term="blogging"></category><category term="history"></category></entry><entry><title>Hello World</title><link href="/hello-world.html" rel="alternate"></link><published>2016-02-08T21:10:00+05:30</published><updated>2016-02-08T21:10:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2016-02-08:/hello-world.html</id><summary type="html">&lt;p&gt;Hello world&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Hello World!&lt;/h1&gt;
-&lt;p&gt;The customary Hello World from a programmer. Even on his blog.&lt;/p&gt;</content><category term="random"></category></entry></feed>
+don&amp;#8217;t know yet what I&amp;#8217;ll be posting or writing here, I think that will become
+more clear with&amp;nbsp;time.&lt;/p&gt;
+&lt;p&gt;Let&amp;#8217;s see where this goes from&amp;nbsp;here!&lt;/p&gt;</content><category term="random"></category><category term="blogging"></category><category term="history"></category></entry><entry><title>Hello World</title><link href="/hello-world.html" rel="alternate"></link><published>2016-02-08T21:10:00+05:30</published><updated>2016-02-08T21:10:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2016-02-08:/hello-world.html</id><summary type="html">&lt;p&gt;Hello&amp;nbsp;world&lt;/p&gt;</summary><content type="html">&lt;h1&gt;Hello&amp;nbsp;World!&lt;/h1&gt;
+&lt;p&gt;The customary Hello World from a programmer. Even on his&amp;nbsp;blog.&lt;/p&gt;</content><category term="random"></category></entry></feed>

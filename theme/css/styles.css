@@ -7,7 +7,7 @@
 body {
   background-color: #fafafa;
   /*background-color: #ecf0f1; */
-  color: #333;
+  color: #403F3F;
   font-family: 'Gentium Basic', serif;
   font-size: 18px;
   line-height: 1.5;
@@ -117,6 +117,10 @@ p { margin: 30px auto; }
   display: block;
 }
 
+.content ol, .content ul {
+  margin-left: 30px;
+}
+
 .post-list {
   list-style: none;
 }
@@ -136,17 +140,31 @@ p { margin: 30px auto; }
   margin: 30px auto;
 }
 
-.postinfo .published {
+.postinfo .published, .postinfo .time-to-read {
   font-style: italic;
 }
 
 .contact p {
   margin: 3px auto;
 }
+
 footer {
   width: 300px;
   margin: 50px auto 0 auto;
   font-size: 0.85em;
   color: #555;
+  text-align: center;
+}
+
+.notification {
+  background-color: #ecf0f1;
+  color: #555;
+  min-width: 140px;
+  padding: 15px;
+  box-shadow: 1px 1px 3px #ddd;
+  font-size: 0.5em;
+  position: fixed;
+  left: 45%;
+  top: 1%;
   text-align: center;
 }
