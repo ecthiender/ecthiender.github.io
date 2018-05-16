@@ -1,6 +1,8 @@
 @import url(reset.css);
 @import url(pygments.css);
 @import url(icons.css);
+/* for monospace code font */
+@import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700');
 
 /* General stuff. */
 
@@ -167,4 +169,14 @@ footer {
   left: 45%;
   top: 1%;
   text-align: center;
+}
+
+code {
+  font-family: 'Inconsolata', monospace;
+}
+
+.highlight {
+  font-family: 'Inconsolata' !important;
+  padding: 3px;
+  font-size: 0.9em !important;
 }

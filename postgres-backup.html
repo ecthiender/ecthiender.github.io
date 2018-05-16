@@ -11,7 +11,7 @@
       <link href='https://fonts.googleapis.com/css?family=Gentium+Basic:400,700' rel='stylesheet' />
       <link rel="stylesheet" href="/theme/css/styles.css" />
 
-      <title>  rayanon's website  </title>
+      <title>  Backup strategies on&nbsp;Postgres - rayanon  </title>
 
   </head>
 
@@ -35,9 +35,6 @@
               <li >
                 <a class="nodec" href="/categories.html">Categories</a>
               </li>
-              <li >
-                <a class="nodec" href="/tags.html">Tags</a>
-              </li>
 
             <!--pages-->
               <li  >
@@ -57,7 +54,7 @@
 
   <div class="postinfo">
     <div class="published" title="2017-03-25T04:08:00+05:30">
-      Posted on March 25 2017
+      March 25 2017
     </div>
     <div class="time-to-read">
       6 min read
@@ -80,8 +77,8 @@ backups are more&nbsp;useful.</p>
 <li>Physical&nbsp;backups</li>
 <li>Continuous&nbsp;backups</li>
 </ol>
-<p><br/></p>
-<h4>Logical&nbsp;backups</h4>
+<p>Let&#8217;s look at each of these&nbsp;below.</p>
+<h3>Logical&nbsp;backups</h3>
 <p>Logical backups are dumps of <span class="caps">SQL</span> statements which describe the state of the
 database. They can be obtained using a tool like <code>pg_dump</code>. These dump files
 are just <span class="caps">SQL</span> files. Hence, they can be imported to another postgres instance
@@ -97,7 +94,7 @@ before altering schema or migrating a&nbsp;database.</p>
 
 
 <p><code>-U</code> takes the postgres username. Port can also be specified via <code>-p</code>.</p>
-<h4>Physical&nbsp;backups</h4>
+<h3>Physical&nbsp;backups</h3>
 <p>Physical backups are backups via the filesystem. Meaning they can be snapshots
 of the filesystem itself, or they could be just copies of the Postgres
 database&#8217;s data directory. The entire database instance&#8217;s state is stored in
@@ -114,7 +111,7 @@ $ rsync --progress --partial --recursive mydb-pgdata-21022017-1803.tar.gz <span 
 
 <p>We first make a compressed (gzipped) tarball of the data directory, and then
 use <code>rsync</code> to copy the files to our backup&nbsp;server.</p>
-<h4>Continuous&nbsp;backups</h4>
+<h3>Continuous&nbsp;backups</h3>
 <p>Continuous backups are an advanced feature of Postgres. Postgres database has
 this design where it first commits a transaction a file on the disk, called the
 Write-ahead Log (or <span class="caps">WAL</span>), and waits for the data to be actually written to the
@@ -142,7 +139,7 @@ here. You can search about it on the internet. But I can suggest using <a href="
 which is a fantastic tool that makes setting up continous backup very easy.
 Once you install and configure <span class="caps">WAL</span>-E it can stream your backup files to S3,
 Google bucket, Azure&nbsp;etc.</p>
-<h4>But which backup to use&nbsp;where?</h4>
+<h3>But which backup to use&nbsp;where?</h3>
 <p>Now, the natural next question is which backup method to use. Should someone
 use all the possible methods, or sticking to one method is good&nbsp;enough?</p>
 <p>It can be confusing or daunting to look at so many options. Hence, I&#8217;m here to
@@ -208,7 +205,7 @@ the&nbsp;database.</p>
       <!-- footer -->
       <footer>
         <p>
-          © 2017 Anon Ray. Powered by <a href="http://getpelican.com/">Pelican</a>.
+          © 2018 Anon Ray. Powered by <a href="http://getpelican.com/">Pelican</a>.
           <!--
             © Anon Ray, license <a href=""> </a>
             unless otherwise noted.
