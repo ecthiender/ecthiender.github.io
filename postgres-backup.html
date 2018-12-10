@@ -56,9 +56,6 @@
     <div class="published" title="2017-03-25T04:08:00+05:30">
       March 25 2017
     </div>
-    <div class="time-to-read">
-      6 min read
-    </div>
 
   </div> <!-- end .postinfo -->
 
@@ -84,12 +81,12 @@ database. They can be obtained using a tool like <code>pg_dump</code>. These dum
 are just <span class="caps">SQL</span> files. Hence, they can be imported to another postgres instance
 using <code>psql</code> normally. It is usually a good idea to take one logical backup
 before altering schema or migrating a&nbsp;database.</p>
-<div class="highlight"><pre><span></span>$ pg_dump -U admin -h db.example.com mydatabase &gt; dump.sql
+<div class="highlight"><pre><span></span>$ pg_dump -U admin -h db.example.com mydatabase <span class="p">&amp;</span>gt<span class="p">;</span> dump.sql
 </pre></div>
 
 
 <p>The file <code>dump.sql</code> is your backup. To recover it, run this in another&nbsp;database:</p>
-<div class="highlight"><pre><span></span>$ psql -U admin -h db2.example.com mydatabase &lt; dump.sql
+<div class="highlight"><pre><span></span>$ psql -U admin -h db2.example.com mydatabase <span class="p">&amp;</span>lt<span class="p">;</span> dump.sql
 </pre></div>
 
 
@@ -194,10 +191,7 @@ the&nbsp;database.</p>
 
   <div class="article-tags">
     tags: &nbsp;
-      <a href="/tag/postgres.html">postgres</a>,
-      <a href="/tag/backups.html">backups</a>,
-      <a href="/tag/sysadmin.html">sysadmin</a>,
-  </div>
+      <a href="/tag/postgres.html">postgres</a> ,       <a href="/tag/backups.html">backups</a> ,       <a href="/tag/sysadmin.html">sysadmin</a>   </div>
 
 
       <hr/>

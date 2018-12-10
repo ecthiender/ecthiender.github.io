@@ -1,5 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>rayanon - Software</title><link href="/" rel="alternate"></link><link href="/feeds/software.atom.xml" rel="self"></link><id>/</id><updated>2017-03-25T04:08:00+05:30</updated><entry><title>Backup strategies on Postgres</title><link href="/postgres-backup.html" rel="alternate"></link><published>2017-03-25T04:08:00+05:30</published><updated>2017-03-25T04:08:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2017-03-25:/postgres-backup.html</id><summary type="html">&lt;p&gt;If you are using any database in production you should always have backups.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>rayanon - Software</title><link href="/" rel="alternate"></link><link href="/feeds/software.atom.xml" rel="self"></link><id>/</id><updated>2018-12-10T11:40:00+05:30</updated><subtitle>Musings of a human existence</subtitle><entry><title>Manage the behemoth of Haskell wreq</title><link href="/haskell-wreq-http-manager.html" rel="alternate"></link><published>2018-12-10T11:40:00+05:30</published><updated>2018-12-10T11:40:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2018-12-10:/haskell-wreq-http-manager.html</id><summary type="html">&lt;p&gt;While Haskell&amp;#8217;s wreq is great a library, but using it unknowingly can have pitfalls. If you&amp;#8217;re not using a session manager, it can take up a lot of memory and even lead to &lt;span class="caps"&gt;TCP&lt;/span&gt; socket&amp;nbsp;leaks.&lt;/p&gt;</summary><content type="html">&lt;p&gt;If you have ever needed to make &lt;span class="caps"&gt;HTTP&lt;/span&gt; requests from your Haskell code, chances
+are that you have used the &lt;a href="http://hackage.haskell.org/package/wreq"&gt;wreq&lt;/a&gt;
+library. If your work was a one-off job, or you have been using it only for one
+or two requests or infrequently, you might not have noticed that wreq needs
+managing once you are making a lot of network&amp;nbsp;requests.&lt;/p&gt;
+&lt;p&gt;In my workplace deployments, backend services make lots of &lt;span class="caps"&gt;HTTP&lt;/span&gt; requests.
+Specifically, they make multiple &lt;span class="caps"&gt;HTTP&lt;/span&gt; requests to the same server, and there are
+a group of servers that they talk to. For example, we make requests to Google,
+&lt;span class="caps"&gt;AWS&lt;/span&gt;, Azure and Digital Ocean cloud services, and to each we make multiple
+requests. I have noticed, if you do not use a &lt;span class="caps"&gt;HTTP&lt;/span&gt; session manager when making
+network requests of the above pattern using wreq, it&amp;nbsp;:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;tends to use up significant memory, probably due to keeping so many &lt;span class="caps"&gt;TCP&lt;/span&gt;
+   connections&amp;nbsp;open&lt;/li&gt;
+&lt;li&gt;tends to perform not so efficiently (tends to be slower), because it would
+   setup and teardown an entire &lt;span class="caps"&gt;TCP&lt;/span&gt; connection for every&amp;nbsp;request&lt;/li&gt;
+&lt;li&gt;can even lead to &lt;span class="caps"&gt;TCP&lt;/span&gt; socket leaks (&lt;a href="https://blog.hasura.io/debugging-tcp-socket-leak-in-a-kubernetes-cluster-99171d3e654b"&gt;read
+   more&lt;/a&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Usually browsers and other popular &lt;span class="caps"&gt;HTTP&lt;/span&gt; clients automatically manage the above
+by keeping &lt;span class="caps"&gt;TCP&lt;/span&gt; connections open and re-using them. But in &lt;code&gt;wreq&lt;/code&gt; you have to be
+explicit about&amp;nbsp;them.&lt;/p&gt;
+&lt;h3&gt;Using wreq&amp;#8217;s session&amp;nbsp;manager&lt;/h3&gt;
+&lt;p&gt;wreq has a &lt;code&gt;Network.Wreq.Session&lt;/code&gt; module, which exposes a &lt;span class="caps"&gt;HTTP&lt;/span&gt; session manager.
+The &lt;span class="caps"&gt;API&lt;/span&gt; is straight-forward, and is used like&amp;nbsp;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;import&lt;/span&gt;           &lt;span class="nn"&gt;Network.Wreq&lt;/span&gt;
+&lt;span class="kr"&gt;import&lt;/span&gt;           &lt;span class="nn"&gt;Network.Wreq.Session&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;Session&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kr"&gt;import&lt;/span&gt; &lt;span class="k"&gt;qualified&lt;/span&gt; &lt;span class="nn"&gt;Network.Wreq.Session&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;Sess&lt;/span&gt;
+
+&lt;span class="nf"&gt;main&lt;/span&gt; &lt;span class="ow"&gt;::&lt;/span&gt; &lt;span class="kt"&gt;IO&lt;/span&gt; &lt;span class="nb"&gt;()&lt;/span&gt;
+&lt;span class="nf"&gt;main&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+  &lt;span class="n"&gt;sess&lt;/span&gt;  &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;Sess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;newSession&lt;/span&gt;
+  &lt;span class="n"&gt;resp&lt;/span&gt;  &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;mkGetRequest&lt;/span&gt; &lt;span class="n"&gt;sess&lt;/span&gt;
+  &lt;span class="n"&gt;resp2&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;mkAnotherRequest&lt;/span&gt; &lt;span class="n"&gt;sess&lt;/span&gt;
+
+&lt;span class="nf"&gt;mkGetRequest&lt;/span&gt; &lt;span class="ow"&gt;::&lt;/span&gt; &lt;span class="kt"&gt;Session&lt;/span&gt; &lt;span class="ow"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;IO&lt;/span&gt; &lt;span class="kt"&gt;ByteString&lt;/span&gt;
+&lt;span class="nf"&gt;mkGetRequest&lt;/span&gt; &lt;span class="n"&gt;sess&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+  &lt;span class="n"&gt;resp&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;Sess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;sess&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;http://httpbin.org/get&amp;quot;&lt;/span&gt;
+  &lt;span class="n"&gt;return&lt;/span&gt; &lt;span class="n"&gt;resp&lt;/span&gt;
+
+&lt;span class="nf"&gt;mkAnotherRequest&lt;/span&gt; &lt;span class="n"&gt;sess&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+  &lt;span class="kt"&gt;Sess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;sess&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;http://httpbin.org/get&amp;quot;&lt;/span&gt;
+  &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The wreq documentation recommends to use the manager if you&amp;#8217;re making multiple
+requests to the same server so that it can re-use &lt;span class="caps"&gt;TCP&lt;/span&gt; connections. But this
+documentation is hidden away in the &lt;code&gt;Session&lt;/code&gt; module separate from the other
+main modules. That is why it is easy to overlook&amp;nbsp;this.&lt;/p&gt;
+&lt;p&gt;Also, the &lt;code&gt;newSession&lt;/code&gt; &lt;span class="caps"&gt;API&lt;/span&gt; creates a manager that manages cookies as well. That
+is, any cookie sent by a server is sent back across requests (how browsers
+behave) when using the same manager. This is not really desirable in backend
+systems unless you&amp;#8217;re dealing with having a user session. Wreq exposes another
+&lt;span class="caps"&gt;API&lt;/span&gt; called &lt;code&gt;newAPISession&lt;/code&gt;. The &lt;span class="caps"&gt;API&lt;/span&gt; usage is exactly same as &lt;code&gt;newSession&lt;/code&gt; but
+this just a &lt;span class="caps"&gt;HTTP&lt;/span&gt; manager without managing any of the&amp;nbsp;cookies.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;import&lt;/span&gt;           &lt;span class="nn"&gt;Network.Wreq&lt;/span&gt;
+&lt;span class="kr"&gt;import&lt;/span&gt; &lt;span class="k"&gt;qualified&lt;/span&gt; &lt;span class="nn"&gt;Network.Wreq.Session&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;Sess&lt;/span&gt;
+
+&lt;span class="nf"&gt;main&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+  &lt;span class="n"&gt;sess&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;Sess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;newAPISession&lt;/span&gt;
+  &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Underneath, wreq uses the &lt;span class="caps"&gt;HTTP&lt;/span&gt; &lt;code&gt;Manager&lt;/code&gt; from the &lt;a href="https://hackage.haskell.org/package/http-client-0.5.10/docs/Network-HTTP-Client.html#t:Manager"&gt;http-client&lt;/a&gt; package for
+sessions. You can use the &lt;code&gt;Manager&lt;/code&gt; directly from the &lt;code&gt;http-client&lt;/code&gt; package as&amp;nbsp;well.&lt;/p&gt;
+&lt;h3&gt;Tidying things&amp;nbsp;up&lt;/h3&gt;
+&lt;p&gt;Finally, you would obviously not define functions that take the &lt;code&gt;Session&lt;/code&gt;
+explicitly in its argument. You should have a &lt;code&gt;Reader&lt;/code&gt; monad constraint on your
+functions and make the the &lt;span class="caps"&gt;HTTP&lt;/span&gt; session manager as part of your environment. Something&amp;nbsp;like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kr"&gt;import&lt;/span&gt;           &lt;span class="nn"&gt;Control.Monad.Reader&lt;/span&gt;
+&lt;span class="kr"&gt;import&lt;/span&gt;           &lt;span class="nn"&gt;Network.Wreq.Session&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;Session&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kr"&gt;import&lt;/span&gt; &lt;span class="k"&gt;qualified&lt;/span&gt; &lt;span class="nn"&gt;Network.Wreq.Session&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;Sess&lt;/span&gt;
+
+&lt;span class="kr"&gt;type&lt;/span&gt; &lt;span class="kt"&gt;App&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kt"&gt;ReaderT&lt;/span&gt; &lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="kt"&gt;IO&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;
+
+&lt;span class="nf"&gt;main&lt;/span&gt; &lt;span class="ow"&gt;::&lt;/span&gt; &lt;span class="kt"&gt;IO&lt;/span&gt; &lt;span class="nb"&gt;()&lt;/span&gt;
+&lt;span class="nf"&gt;main&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+  &lt;span class="n"&gt;sess&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;Sess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;newAPISession&lt;/span&gt;
+  &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;flip&lt;/span&gt; &lt;span class="n"&gt;runReaderT&lt;/span&gt; &lt;span class="n"&gt;sess&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+    &lt;span class="n"&gt;resp&lt;/span&gt;  &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;mkGetRequest&lt;/span&gt; &lt;span class="n"&gt;sess&lt;/span&gt;
+    &lt;span class="n"&gt;resp2&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;mkAnotherRequest&lt;/span&gt; &lt;span class="n"&gt;sess&lt;/span&gt;
+  &lt;span class="n"&gt;putStrLn&lt;/span&gt; &lt;span class="o"&gt;$&lt;/span&gt; &lt;span class="n"&gt;show&lt;/span&gt; &lt;span class="n"&gt;res&lt;/span&gt;
+
+&lt;span class="nf"&gt;mkGetRequest&lt;/span&gt; &lt;span class="ow"&gt;::&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;MonadReader&lt;/span&gt; &lt;span class="kt"&gt;Session&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;IO&lt;/span&gt; &lt;span class="kt"&gt;ByteString&lt;/span&gt;
+&lt;span class="nf"&gt;mkGetRequest&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+  &lt;span class="n"&gt;sess&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;ask&lt;/span&gt;
+  &lt;span class="n"&gt;resp&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="kt"&gt;Sess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;sess&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;http://httpbin.org/get&amp;quot;&lt;/span&gt;
+  &lt;span class="n"&gt;return&lt;/span&gt; &lt;span class="n"&gt;resp&lt;/span&gt;
+
+&lt;span class="nf"&gt;mkAnotherRequest&lt;/span&gt; &lt;span class="ow"&gt;::&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;MonadReader&lt;/span&gt; &lt;span class="kt"&gt;Session&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="ow"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="kt"&gt;IO&lt;/span&gt; &lt;span class="kt"&gt;ByteString&lt;/span&gt;
+&lt;span class="nf"&gt;mkAnotherRequest&lt;/span&gt; &lt;span class="ow"&gt;=&lt;/span&gt; &lt;span class="kr"&gt;do&lt;/span&gt;
+  &lt;span class="n"&gt;sess&lt;/span&gt; &lt;span class="ow"&gt;&amp;lt;-&lt;/span&gt; &lt;span class="n"&gt;ask&lt;/span&gt;
+  &lt;span class="kt"&gt;Sess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;sess&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;http://httpbin.org/get&amp;quot;&lt;/span&gt;
+  &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Wreq also has another problem. It throws exceptions when the response from the
+server is a non-200 response. It also throws exceptions if the network
+connection fails. In production code we need to handle this behaviour of &lt;code&gt;wreq&lt;/code&gt;
+as well to make if safer. But that I&amp;#8217;ll probably discuss in another&amp;nbsp;post.&lt;/p&gt;
+&lt;hr&gt;</content><category term="programming"></category><category term="haskell"></category><category term="wreq"></category></entry><entry><title>Backup strategies on Postgres</title><link href="/postgres-backup.html" rel="alternate"></link><published>2017-03-25T04:08:00+05:30</published><updated>2017-03-25T04:08:00+05:30</updated><author><name>Anon Ray</name></author><id>tag:None,2017-03-25:/postgres-backup.html</id><summary type="html">&lt;p&gt;If you are using any database in production you should always have backups.
 Servers can crash, disks can fail, data can get corrupted, people can make
 mistakes; a lot of failures can happen with the production instance. Hence it
 is extremely important to have backups on a production&amp;nbsp;system.&lt;/p&gt;
@@ -24,12 +127,12 @@ database. They can be obtained using a tool like &lt;code&gt;pg_dump&lt;/code&gt
 are just &lt;span class="caps"&gt;SQL&lt;/span&gt; files. Hence, they can be imported to another postgres instance
 using &lt;code&gt;psql&lt;/code&gt; normally. It is usually a good idea to take one logical backup
 before altering schema or migrating a&amp;nbsp;database.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pg_dump -U admin -h db.example.com mydatabase &amp;gt; dump.sql
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ pg_dump -U admin -h db.example.com mydatabase &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;gt&lt;span class="p"&gt;;&lt;/span&gt; dump.sql
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;The file &lt;code&gt;dump.sql&lt;/code&gt; is your backup. To recover it, run this in another&amp;nbsp;database:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ psql -U admin -h db2.example.com mydatabase &amp;lt; dump.sql
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ psql -U admin -h db2.example.com mydatabase &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;lt&lt;span class="p"&gt;;&lt;/span&gt; dump.sql
 &lt;/pre&gt;&lt;/div&gt;
 
 

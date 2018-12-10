@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="description" content="rayanon, Anon, Anon Ray, ecthiender, blog, website" />
+      <meta name="author" content="Anon Ray, rayanon, ecthiender" />
+
+      <link href='https://fonts.googleapis.com/css?family=Gentium+Basic:400,700' rel='stylesheet' />
+      <link rel="stylesheet" href="/theme/css/styles.css" />
+
+      <title>  Manage the behemoth of Haskell&nbsp;wreq - rayanon  </title>
+
+  </head>
+
+  <body>
+    <div id="main-container">
+      <!-- header -->
+      <header class="site-header">
+        <!-- site title and subtitle -->
+        <div class="site-banner">
+          <h1> <a class="sitetitle nodec" href="/">rayanon</a> </h1>
+          <h4 class="sitesubtitle">Musings of a human existence</h4>
+        </div>
+        <!-- nav -->
+        <!-- set the current page based on page name -->
+        <nav role="menu" class="menu">
+          <ul>
+            <!-- menu items-->
+              <li >
+                <a class="nodec" href="/">Home</a>
+              </li>
+              <li >
+                <a class="nodec" href="/categories.html">Categories</a>
+              </li>
+
+            <!--pages-->
+              <li  >
+                <a class="nodec" href="/pages/about.html">About</a>
+              </li>
+          </ul>
+        </nav>
+      </header>
+
+      <hr/>
+
+      <!-- content -->
+
+<section class="content">
+
+  <h2> Manage the behemoth of Haskell&nbsp;wreq </h2>
+
+  <div class="postinfo">
+    <div class="published" title="2018-12-10T11:40:00+05:30">
+      December 10 2018
+    </div>
+
+  </div> <!-- end .postinfo -->
+
+  <div class="article">
+    <p>If you have ever needed to make <span class="caps">HTTP</span> requests from your Haskell code, chances
+are that you have used the <a href="http://hackage.haskell.org/package/wreq">wreq</a>
+library. If your work was a one-off job, or you have been using it only for one
+or two requests or infrequently, you might not have noticed that wreq needs
+managing once you are making a lot of network&nbsp;requests.</p>
+<p>In my workplace deployments, backend services make lots of <span class="caps">HTTP</span> requests.
+Specifically, they make multiple <span class="caps">HTTP</span> requests to the same server, and there are
+a group of servers that they talk to. For example, we make requests to Google,
+<span class="caps">AWS</span>, Azure and Digital Ocean cloud services, and to each we make multiple
+requests. I have noticed, if you do not use a <span class="caps">HTTP</span> session manager when making
+network requests of the above pattern using wreq, it&nbsp;:</p>
+<ol>
+<li>tends to use up significant memory, probably due to keeping so many <span class="caps">TCP</span>
+   connections&nbsp;open</li>
+<li>tends to perform not so efficiently (tends to be slower), because it would
+   setup and teardown an entire <span class="caps">TCP</span> connection for every&nbsp;request</li>
+<li>can even lead to <span class="caps">TCP</span> socket leaks (<a href="https://blog.hasura.io/debugging-tcp-socket-leak-in-a-kubernetes-cluster-99171d3e654b">read
+   more</a>)</li>
+</ol>
+<p>Usually browsers and other popular <span class="caps">HTTP</span> clients automatically manage the above
+by keeping <span class="caps">TCP</span> connections open and re-using them. But in <code>wreq</code> you have to be
+explicit about&nbsp;them.</p>
+<h3>Using wreq&#8217;s session&nbsp;manager</h3>
+<p>wreq has a <code>Network.Wreq.Session</code> module, which exposes a <span class="caps">HTTP</span> session manager.
+The <span class="caps">API</span> is straight-forward, and is used like&nbsp;:</p>
+<div class="highlight"><pre><span></span><span class="kr">import</span>           <span class="nn">Network.Wreq</span>
+<span class="kr">import</span>           <span class="nn">Network.Wreq.Session</span> <span class="p">(</span><span class="kt">Session</span><span class="p">)</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Network.Wreq.Session</span> <span class="k">as</span> <span class="n">Sess</span>
+
+<span class="nf">main</span> <span class="ow">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span>
+  <span class="n">sess</span>  <span class="ow">&lt;-</span> <span class="kt">Sess</span><span class="o">.</span><span class="n">newSession</span>
+  <span class="n">resp</span>  <span class="ow">&lt;-</span> <span class="n">mkGetRequest</span> <span class="n">sess</span>
+  <span class="n">resp2</span> <span class="ow">&lt;-</span> <span class="n">mkAnotherRequest</span> <span class="n">sess</span>
+
+<span class="nf">mkGetRequest</span> <span class="ow">::</span> <span class="kt">Session</span> <span class="ow">-&gt;</span> <span class="kt">IO</span> <span class="kt">ByteString</span>
+<span class="nf">mkGetRequest</span> <span class="n">sess</span> <span class="ow">=</span> <span class="kr">do</span>
+  <span class="n">resp</span> <span class="ow">&lt;-</span> <span class="kt">Sess</span><span class="o">.</span><span class="n">get</span> <span class="n">sess</span> <span class="s">&quot;http://httpbin.org/get&quot;</span>
+  <span class="n">return</span> <span class="n">resp</span>
+
+<span class="nf">mkAnotherRequest</span> <span class="n">sess</span> <span class="ow">=</span> <span class="kr">do</span>
+  <span class="kt">Sess</span><span class="o">.</span><span class="n">get</span> <span class="n">sess</span> <span class="s">&quot;http://httpbin.org/get&quot;</span>
+  <span class="o">...</span>
+</pre></div>
+
+
+<p>The wreq documentation recommends to use the manager if you&#8217;re making multiple
+requests to the same server so that it can re-use <span class="caps">TCP</span> connections. But this
+documentation is hidden away in the <code>Session</code> module separate from the other
+main modules. That is why it is easy to overlook&nbsp;this.</p>
+<p>Also, the <code>newSession</code> <span class="caps">API</span> creates a manager that manages cookies as well. That
+is, any cookie sent by a server is sent back across requests (how browsers
+behave) when using the same manager. This is not really desirable in backend
+systems unless you&#8217;re dealing with having a user session. Wreq exposes another
+<span class="caps">API</span> called <code>newAPISession</code>. The <span class="caps">API</span> usage is exactly same as <code>newSession</code> but
+this just a <span class="caps">HTTP</span> manager without managing any of the&nbsp;cookies.</p>
+<div class="highlight"><pre><span></span><span class="kr">import</span>           <span class="nn">Network.Wreq</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Network.Wreq.Session</span> <span class="k">as</span> <span class="n">Sess</span>
+
+<span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span>
+  <span class="n">sess</span> <span class="ow">&lt;-</span> <span class="kt">Sess</span><span class="o">.</span><span class="n">newAPISession</span>
+  <span class="o">...</span>
+</pre></div>
+
+
+<p>Underneath, wreq uses the <span class="caps">HTTP</span> <code>Manager</code> from the <a href="https://hackage.haskell.org/package/http-client-0.5.10/docs/Network-HTTP-Client.html#t:Manager">http-client</a> package for
+sessions. You can use the <code>Manager</code> directly from the <code>http-client</code> package as&nbsp;well.</p>
+<h3>Tidying things&nbsp;up</h3>
+<p>Finally, you would obviously not define functions that take the <code>Session</code>
+explicitly in its argument. You should have a <code>Reader</code> monad constraint on your
+functions and make the the <span class="caps">HTTP</span> session manager as part of your environment. Something&nbsp;like:</p>
+<div class="highlight"><pre><span></span><span class="kr">import</span>           <span class="nn">Control.Monad.Reader</span>
+<span class="kr">import</span>           <span class="nn">Network.Wreq.Session</span> <span class="p">(</span><span class="kt">Session</span><span class="p">)</span>
+<span class="kr">import</span> <span class="k">qualified</span> <span class="nn">Network.Wreq.Session</span> <span class="k">as</span> <span class="n">Sess</span>
+
+<span class="kr">type</span> <span class="kt">App</span> <span class="n">r</span> <span class="ow">=</span> <span class="kt">ReaderT</span> <span class="n">r</span> <span class="kt">IO</span> <span class="n">a</span>
+
+<span class="nf">main</span> <span class="ow">::</span> <span class="kt">IO</span> <span class="nb">()</span>
+<span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span>
+  <span class="n">sess</span> <span class="ow">&lt;-</span> <span class="kt">Sess</span><span class="o">.</span><span class="n">newAPISession</span>
+  <span class="n">res</span> <span class="ow">&lt;-</span> <span class="n">flip</span> <span class="n">runReaderT</span> <span class="n">sess</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">resp</span>  <span class="ow">&lt;-</span> <span class="n">mkGetRequest</span> <span class="n">sess</span>
+    <span class="n">resp2</span> <span class="ow">&lt;-</span> <span class="n">mkAnotherRequest</span> <span class="n">sess</span>
+  <span class="n">putStrLn</span> <span class="o">$</span> <span class="n">show</span> <span class="n">res</span>
+
+<span class="nf">mkGetRequest</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">MonadReader</span> <span class="kt">Session</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="kt">IO</span> <span class="kt">ByteString</span>
+<span class="nf">mkGetRequest</span> <span class="ow">=</span> <span class="kr">do</span>
+  <span class="n">sess</span> <span class="ow">&lt;-</span> <span class="n">ask</span>
+  <span class="n">resp</span> <span class="ow">&lt;-</span> <span class="kt">Sess</span><span class="o">.</span><span class="n">get</span> <span class="n">sess</span> <span class="s">&quot;http://httpbin.org/get&quot;</span>
+  <span class="n">return</span> <span class="n">resp</span>
+
+<span class="nf">mkAnotherRequest</span> <span class="ow">::</span> <span class="p">(</span><span class="kt">MonadReader</span> <span class="kt">Session</span><span class="p">)</span> <span class="ow">=&gt;</span> <span class="kt">IO</span> <span class="kt">ByteString</span>
+<span class="nf">mkAnotherRequest</span> <span class="ow">=</span> <span class="kr">do</span>
+  <span class="n">sess</span> <span class="ow">&lt;-</span> <span class="n">ask</span>
+  <span class="kt">Sess</span><span class="o">.</span><span class="n">get</span> <span class="n">sess</span> <span class="s">&quot;http://httpbin.org/get&quot;</span>
+  <span class="o">...</span>
+</pre></div>
+
+
+<p>Wreq also has another problem. It throws exceptions when the response from the
+server is a non-200 response. It also throws exceptions if the network
+connection fails. In production code we need to handle this behaviour of <code>wreq</code>
+as well to make if safer. But that I&#8217;ll probably discuss in another&nbsp;post.</p>
+<hr>
+  </div> <!-- end .article -->
+
+</section>
+
+  <div class="article-tags">
+    tags: &nbsp;
+      <a href="/tag/programming.html">programming</a> ,       <a href="/tag/haskell.html">haskell</a> ,       <a href="/tag/wreq.html">wreq</a>   </div>
+
+
+      <hr/>
+
+      <!-- footer -->
+      <footer>
+        <p>
+          © 2018 Anon Ray. Powered by <a href="http://getpelican.com/">Pelican</a>.
+          <!--
+            © Anon Ray, license <a href=""> </a>
+            unless otherwise noted.
+          -->
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

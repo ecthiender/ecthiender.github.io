@@ -142,7 +142,13 @@ p { margin: 30px auto; }
   margin: 30px auto;
 }
 
-.postinfo .published, .postinfo .time-to-read {
+.post-list-item .published,
+.post-list-item .read-more {
+  color: #787474;
+}
+
+.postinfo .published,
+.postinfo .time-to-read {
   font-style: italic;
 }
 
@@ -177,6 +183,7 @@ code {
 
 .highlight {
   font-family: 'Inconsolata' !important;
-  padding: 3px;
-  font-size: 0.9em !important;
+  padding: 3px 5px;
+  font-size: 0.8em !important;
+  overflow-y: scroll;
 }
